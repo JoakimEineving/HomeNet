@@ -1,0 +1,6 @@
+@HomeNet.Services.LightingService.Api_HostAddress = http://localhost:5155
+
+GET {{HomeNet.Services.LightingService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
