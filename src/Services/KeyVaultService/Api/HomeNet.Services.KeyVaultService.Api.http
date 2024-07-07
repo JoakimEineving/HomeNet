@@ -1,0 +1,6 @@
+@HomeNet.Services.KeyVaultService.Api_HostAddress = http://localhost:5110
+
+GET {{HomeNet.Services.KeyVaultService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
