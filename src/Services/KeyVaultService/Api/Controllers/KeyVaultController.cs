@@ -17,8 +17,8 @@ namespace HomeNet.Services.KeyVaultService.Api.Controllers
             _keyVaultService = keyVaultService;
         }
 
-        [HttpGet("secret-value")]
-        public async Task<IActionResult> GetSecretValueAsync([FromQuery] string resourceType, [FromQuery] string keyType)
+        [HttpGet("secret-value/{resourceType}/{keyType}")]
+        public async Task<IActionResult> GetSecretValueAsync(string resourceType, string keyType)
         {
             try
             {
@@ -37,8 +37,8 @@ namespace HomeNet.Services.KeyVaultService.Api.Controllers
             }
         }
 
-        [HttpGet("secret")]
-        public async Task<IActionResult> GetSecretAsync([FromQuery] string resourceType, [FromQuery] string keyType)
+        [HttpGet("secret/{resourceType}/{keyType}")]
+        public async Task<IActionResult> GetSecretAsync(string resourceType, string keyType)
         {
             try
             {
