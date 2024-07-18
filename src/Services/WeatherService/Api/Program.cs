@@ -1,5 +1,7 @@
 using HomeNet.Services.Shared.Services.Interfaces;
 using HomeNet.Services.Shared.Services.KeyVault;
+using HomeNet.Services.WeatherService.Services.Interfaces;
+using HomeNet.Services.WeatherService.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ builder.Services.AddHttpClient<IKeyVaultServiceClient, KeyVaultServiceClient>(cl
 {
     client.BaseAddress = new Uri("http://localhost:5110");
 });
+builder.Services.AddScoped<IWeatherService, WeatherService>();
 
 var app = builder.Build();
 
@@ -27,6 +30,5 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();

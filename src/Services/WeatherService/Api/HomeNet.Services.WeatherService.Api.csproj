@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Services\HomeNet.Services.Shared.Services.csproj" />
+    <ProjectReference Include="..\Services\HomeNet.Services.WeatherService.Services.csproj" />
   </ItemGroup>
 
 </Project>
