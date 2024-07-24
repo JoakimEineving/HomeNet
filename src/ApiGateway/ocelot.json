@@ -1,12 +1,13 @@
 {
   "Routes": [
+    //WeatherService
     {
       "DownstreamPathTemplate": "/api/weather/forecast/{longitude}/{latitude}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7263
+          "Host": "weatherservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/weather/{longitude}/{latitude}",

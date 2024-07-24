@@ -1,0 +1,34 @@
+# version: '3.4'
+
+services:
+  apigateway:
+    image: apigateway
+    build:
+      context: ./src
+      dockerfile: ./ApiGateway/Dockerfile
+    ports:
+      - "5000:80"
+    depends_on:
+      - weatherservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  keyvaultservice:
+    image: keyvaultservice
+    build:
+      context: ./src
+      dockerfile: ./Services/KeyVaultService/Api/Dockerfile
+    ports:
+      - "5110:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  weatherservice:
+    image: weatherservice
+    build:
+      context: ./src
+      dockerfile: ./Services/WeatherService/Api/Dockerfile
+    ports:
+      - "5006:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
