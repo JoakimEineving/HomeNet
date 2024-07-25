@@ -1,17 +1,23 @@
-﻿Folder structure:
+﻿Project structure:
 
 ```
+├───docker-compose.yml - Docker compose file
 ├───docs - Documentation files
 └───src - Source Code  
+    ├───ApiGateway - Ocelot api gateway
     ├───Core - Shared resources
     │   ├── Helpers
     │   ├── Models
     │   ├── Dtos
     |
-    ├───Services - Backend layer with microservices
+    ├───Services - Layer with microservices
     │   └───MicroService - Project structure for a microservice
-    │       ├───Api
-    │       ├───Services
-    │       │───Data
-    │       └───Tests
+    │   |   ├───Api
+    │   |   |   ├──Dockerfile - Dockerfile for microservice container
+    │   |   ├───Services
+    │   |   ├───Data
+    │   |   └───Tests
+    |   |
+    |   └───Shared - Shared microservice resources
+
 ```
