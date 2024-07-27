@@ -1,5 +1,3 @@
-# version: '3.4'
-
 services:
   apigateway:
     image: apigateway
@@ -7,11 +5,14 @@ services:
       context: ./src
       dockerfile: ./ApiGateway/Dockerfile
     ports:
-      - "5000:80"
+      - "5000:8080"
+      # - "5001:8081"
     depends_on:
       - weatherservice
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      # - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      # - ASPNETCORE_HTTPS_PORT=8081
 
   keyvaultservice:
     image: keyvaultservice
@@ -19,9 +20,17 @@ services:
       context: ./src
       dockerfile: ./Services/KeyVaultService/Api/Dockerfile
     ports:
-      - "5110:80"
+      - "5010:8080"
+      # - "5011:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      # - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      # - ASPNETCORE_HTTPS_PORT=8081
+      
+      - KeyVaultUri=${KeyVaultUri}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
 
   weatherservice:
     image: weatherservice
@@ -29,6 +38,9 @@ services:
       context: ./src
       dockerfile: ./Services/WeatherService/Api/Dockerfile
     ports:
-      - "5006:80"
+      - "5006:8080"
+      # - "5007:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      # - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      # - ASPNETCORE_HTTPS_PORT=8081
