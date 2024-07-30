@@ -14,9 +14,18 @@ namespace HomeNet.Services.KeyVaultService.Services.Services
 
         public AzureSecretClient(IConfiguration configuration, ILogger<AzureSecretClient> logger)
         {
-            var vaultUri = new Uri(configuration["KeyVaultUri"] ?? throw new ArgumentNullException("KeyVaultUri is missing from configuration"));
-            _secretClient = new SecretClient(vaultUri, new DefaultAzureCredential());
             _logger = logger;
+            try
+            {
+                var vaultUri = new Uri(configuration["KeyVaultUri"] ?? throw new ArgumentNullException("KeyVaultUri is missing from configuration"));
+                _secretClient = new SecretClient(vaultUri, new DefaultAzureCredential());
+                _logger.LogInformation("SecretClient successfully initialized.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to initialize SecretClient.");
+                throw;
+            }
         }
 
         public async Task<KeyVaultSecret> GetSecretAsync(string secretName)

@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient<IKeyVaultServiceClient, KeyVaultServiceClient>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5110");
+    client.BaseAddress = new Uri("http://keyvaultservice:8080");
 });
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 
