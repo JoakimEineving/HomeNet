@@ -1,6 +1,6 @@
 {
   "Routes": [
-    //WeatherService
+    //WeatherService - Get Weather Forecast
     {
       "DownstreamPathTemplate": "/api/weather/forecast/{longitude}/{latitude}",
       "DownstreamScheme": "http",
@@ -12,9 +12,35 @@
       ],
       "UpstreamPathTemplate": "/weather/{longitude}/{latitude}",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    // LightingService - Get Lights
+    {
+      "DownstreamPathTemplate": "/api/hue/lights",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "lightingservice",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/hue/lights",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    // LightingService - Set Light State
+    {
+      "DownstreamPathTemplate": "/api/hue/lights/{lightNumber}/state",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "lightingservice",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/hue/lights/{lightNumber}/state",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://weatherservice:8080"
+    "BaseUrl": "http://localhost:5000"
   }
 }

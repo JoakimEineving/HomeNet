@@ -44,3 +44,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       # - ASPNETCORE_URLS=https://+:8081;http://+:8080
       # - ASPNETCORE_HTTPS_PORT=8081
+
+  lightingservice:
+    image: lightingservice
+    build:
+      context: ./src
+      dockerfile: ./Services/LightingService/Api/Dockerfile
+    ports:
+      - "5020:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
