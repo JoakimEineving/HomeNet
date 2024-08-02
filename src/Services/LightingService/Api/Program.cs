@@ -16,7 +16,7 @@ builder.Services.AddHttpClient<IKeyVaultServiceClient, KeyVaultServiceClient>(cl
 
 builder.Services.AddHttpClient<IHueService, HueService>(client =>
 {
-    client.BaseAddress = new Uri("https://api.meethue.com/");
+    client.BaseAddress = new Uri("https://api.meethue.com");
 });
 
 var app = builder.Build();
