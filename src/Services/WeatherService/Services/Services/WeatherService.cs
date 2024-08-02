@@ -31,10 +31,9 @@ namespace HomeNet.Services.WeatherService.Services.Services
             });
 
 
-            var queryString = $"?lat={latitude}&lon={longitude}&units=metric&appid={apiKey}";
-            var requestUrl = $"{baseUrl}{queryString}";
+            var request = $"?lat={latitude}&lon={longitude}&units=metric&appid={apiKey}";
 
-            var response = await _httpClient.GetAsync(requestUrl);
+            var response = await _httpClient.GetAsync(request);
             response.EnsureSuccessStatusCode();
 
             //TODO: Add mapper to map response to a DTO

@@ -13,7 +13,10 @@ builder.Services.AddHttpClient<IKeyVaultServiceClient, KeyVaultServiceClient>(cl
 {
     client.BaseAddress = new Uri("http://keyvaultservice:8080");
 });
-builder.Services.AddScoped<IWeatherService, WeatherService>();
+builder.Services.AddHttpClient<IWeatherService, WeatherService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.openweathermap.org/data/3.0/onecall");
+});
 
 var app = builder.Build();
 
