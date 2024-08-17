@@ -1,6 +1,7 @@
 ﻿using HomeNet.Core.Dtos.KeyVault;
 using HomeNet.Core.Dtos.Lighting;
 using HomeNet.Services.LightingService.Services.Interfaces;
+using HomeNet.Services.LightingService.Services.Models;
 using HomeNet.Services.Shared.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
@@ -16,12 +17,14 @@ namespace HomeNet.Services.LightingService.Services.PhilipsHue
         private readonly ILogger<HueService> _logger;
         private readonly HttpClient _httpClient;
         private readonly IKeyVaultServiceClient _keyVaultServiceClient;
+        private readonly IHueTokenService _hueTokenService;
 
-        public HueService(ILogger<HueService> logger ,HttpClient httpClient, IKeyVaultServiceClient keyVaultServiceClient)
+        public HueService(ILogger<HueService> logger, HttpClient httpClient, IKeyVaultServiceClient keyVaultServiceClient, IHueTokenService hueTokenService)
         {
             _logger = logger;
             _httpClient = httpClient;
             _keyVaultServiceClient = keyVaultServiceClient;
+            _hueTokenService=hueTokenService;
         }
 
         public async Task<string> GetLightsAsync()
@@ -64,9 +67,9 @@ namespace HomeNet.Services.LightingService.Services.PhilipsHue
             if (accessToken == null)
             {
                 _logger.LogInformation("Access token is null or expired, refreshing token");
-                accessToken = await RefreshAccessTokenAsync();
+                accessToken = await _hueTokenService.RefreshAccessTokenAsync();
             }
-            
+
             var request = new HttpRequestMessage(HttpMethod.Put, $"/bridge/{username}/lights/{lightNumber}/state");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -80,61 +83,6 @@ namespace HomeNet.Services.LightingService.Services.PhilipsHue
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
-        }
-
-        private async Task<string> RefreshAccessTokenAsync()
-        {
-            var clientId = await _keyVaultServiceClient.GetSecretValueAsync(new GetSecretDto
-            {
-                ResourceType = "PhilipsHue",
-                KeyType = "ClientId"
-            });
-
-            var clientSecret = await _keyVaultServiceClient.GetSecretValueAsync(new GetSecretDto
-            {
-                ResourceType = "PhilipsHue",
-                KeyType = "ClientSecret"
-            });
-
-            var refreshToken = await _keyVaultServiceClient.GetSecretValueAsync(new GetSecretDto
-            {
-                ResourceType = "PhilipsHue",
-                KeyType = "RefreshToken"
-            });
-
-            var request = new HttpRequestMessage(HttpMethod.Post, "/oauth2/refresh?grant_type=refresh_token");
-            var authHeader = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
-            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-
-            var body = new StringContent($"refresh_token={refreshToken}", Encoding.UTF8, "application/x-www-form-urlencoded");
-            request.Content = body;
-
-            var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            var jsonDoc = JsonDocument.Parse(responseContent);
-            var newAccessToken = jsonDoc.RootElement.GetProperty("access_token").GetString();
-            var expiresIn = jsonDoc.RootElement.GetProperty("access_token_expires_in").GetString();
-            
-            if (newAccessToken == null || expiresIn == null)
-            {
-                throw new Exception("Failed to retrieve access token");
-            }
-
-            var expiresOn = DateTimeOffset.UtcNow.AddSeconds(int.Parse(expiresIn));
-
-            await _keyVaultServiceClient.SetSecretAsync(new CreateSecretDto
-            {
-                ResourceType = "PhilipsHue",
-                KeyType = "AccessToken",
-                Value = newAccessToken,
-                ExpiresOn = expiresOn
-            });
-
-            return newAccessToken;
         }
     }
 }

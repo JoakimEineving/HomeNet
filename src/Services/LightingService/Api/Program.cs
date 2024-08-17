@@ -12,9 +12,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<IKeyVaultServiceClient, KeyVaultServiceClient>(client =>
 {
     client.BaseAddress = new Uri("http://keyvaultservice:8080");
+    //client.BaseAddress = new Uri("https://localhost:7299/");
 });
 
 builder.Services.AddHttpClient<IHueService, HueService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.meethue.com");
+});
+builder.Services.AddHttpClient<IHueTokenService, HueTokenService>(client =>
 {
     client.BaseAddress = new Uri("https://api.meethue.com");
 });
